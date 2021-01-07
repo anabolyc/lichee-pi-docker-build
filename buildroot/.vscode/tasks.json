@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build: build docker image",
+            "type": "shell",
+            "command": "docker build -t $(cat tag) .",
+            "problemMatcher": []
+        },
+        {
+            "label": "build: (debug) run bash",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot-licheepi-zero:/src $(cat tag) /bin/bash",
+            "problemMatcher": []
+        },
+        {
+            "label": "build: autoconfig",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot-licheepi-zero:/src $(cat tag) make licheepi_zero_defconfig",
+            "problemMatcher": []
+        },
+        {
+            "label": "build: (optional) make menuconfig",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot-licheepi-zero:/src $(cat tag) make menuconfig",
+            "problemMatcher": []
+        },
+        {
+            "label": "build: make",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot-licheepi-zero:/src $(cat tag) make",
+            "problemMatcher": []
+        }
+    ]
+}

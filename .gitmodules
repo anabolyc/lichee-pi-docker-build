@@ -1,0 +1,3 @@
+[submodule "buildroot/buildroot-licheepi-zero"]
+	path = buildroot/buildroot-licheepi-zero
+	url = https://github.com/Squonk42/buildroot-licheepi-zero
