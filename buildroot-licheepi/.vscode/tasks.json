@@ -1,0 +1,83 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build: build docker image",
+            "type": "shell",
+            "command": "docker build -t $(cat tag) .",
+            "problemMatcher": []
+        },
+        {
+            "label": "build: make distclean",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot:/src -v $PWD/rootfs_overlay:/rootfs_overlay -v $PWD/scripts:/scripts $(cat tag) make distclean",
+            "problemMatcher": []
+        },
+        {
+            "label": "build: (debug) run bash",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot:/src -v $PWD/rootfs_overlay:/rootfs_overlay -v $PWD/scripts:/scripts $(cat tag) /bin/bash",
+            "problemMatcher": []
+        },
+        {
+            "label": "build: autoconfig",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot:/src -v $PWD/rootfs_overlay:/rootfs_overlay -v $PWD/scripts:/scripts $(cat tag) make licheepi_zero_defconfig",
+            "problemMatcher": []
+        },
+        {
+            "label": "build: (optional) make menuconfig",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot:/src -v $PWD/rootfs_overlay:/rootfs_overlay -v $PWD/scripts:/scripts $(cat tag) make menuconfig",
+            "problemMatcher": []
+        },
+        {
+            "label": "build: make",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot:/src -v $PWD/rootfs_overlay:/rootfs_overlay -v $PWD/scripts:/scripts $(cat tag) make",
+            "problemMatcher": []
+        },
+        {
+            "label": "build snapcast: make distclean",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot:/src -v $PWD/snapos/buildroot-external:/snapcast -v $PWD/scripts:/scripts -v $PWD/rootfs_overlay:/rootfs_overlay $(cat tag) make distclean",
+            "problemMatcher": []
+        },
+        {
+            "label": "build snapcast: (debug) run bash",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot:/src -v $PWD/snapos/buildroot-external:/snapcast -v $PWD/scripts:/scripts -v $PWD/rootfs_overlay:/rootfs_overlay $(cat tag) /bin/bash",
+            "problemMatcher": []
+        },
+        {
+            "label": "build snapcast: autoconfig",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot:/src -v $PWD/snapos/buildroot-external:/snapcast -v $PWD/scripts:/scripts -v $PWD/rootfs_overlay:/rootfs_overlay -e BR2_EXTERNAL=/snapcast $(cat tag) make licheepi_zero_defconfig",
+            "problemMatcher": []
+        },
+        {
+            "label": "build snapcast: (optional) make menuconfig",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot:/src -v $PWD/snapos/buildroot-external:/snapcast -v $PWD/scripts:/scripts -v $PWD/rootfs_overlay:/rootfs_overlay -e BR2_EXTERNAL=/snapcast $(cat tag) make menuconfig",
+            "problemMatcher": []
+        },
+        {
+            "label": "build snapcast: make",
+            "type": "shell",
+            "command": "docker run -it --rm --user $(id -u):$(id -g) -v $PWD/buildroot:/src -v $PWD/snapos/buildroot-external:/snapcast -v $PWD/scripts:/scripts -v $PWD/rootfs_overlay:/rootfs_overlay -e BR2_EXTERNAL=/snapcast $(cat tag) make",
+            "problemMatcher": []
+        },
+        {
+            "label": "write image to /dev/sdc",
+            "type": "shell",
+            "command": "lsblk /dev/sdc && sudo dd if=$PWD/buildroot/output/images/sdcard.img of=/dev/sdc bs=1M && sudo sync",
+            "problemMatcher": []
+        },
+        {
+            "label": "run monitor",
+            "type": "shell",
+            "command": "screen /dev/ttyUSB0 115200",
+            "problemMatcher": []
+        }
+    ]
+}

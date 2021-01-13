@@ -24,6 +24,6 @@ RUN apt-get update && apt-get install -y \
     python-pip \
     libxml-parser-perl \
     cpio \
-    bc
+    bc 
 
 WORKDIR /src

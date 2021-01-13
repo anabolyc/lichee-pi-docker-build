@@ -1,3 +1,12 @@
-[submodule "buildroot/buildroot-licheepi-zero"]
-	path = buildroot/buildroot-licheepi-zero
+[submodule "buildroot/snapos"]
+	path = buildroot/snapos
+	url = https://github.com/badaix/snapos/
+[submodule "buildroot/buildroot"]
+	path = buildroot/buildroot
+	url = https://github.com/buildroot/buildroot/
+[submodule "buildroot-licheepi/buildroot"]
+	path = buildroot-licheepi/buildroot
 	url = https://github.com/Squonk42/buildroot-licheepi-zero
+[submodule "buildroot-licheepi/snapos"]
+	path = buildroot-licheepi/snapos
+	url = https://github.com/badaix/snapos

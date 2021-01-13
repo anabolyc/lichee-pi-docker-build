@@ -6,17 +6,19 @@ Set of tools to build filesystem image for Lichee Pi Zero and Nano
 
 As it well stated by good people under [this Hackaday post](https://hackaday.io/project/134065-funkey-zero/log/144796-linux-distribution), buildroot is capable to generate u-boot, kernel and root filesystem image and build a single SD Card image that contains them all at their expected location using a single command `make`. So they have prepared all necessary buildroot customizations in [gh://Squonk42/buildroot-licheepi-zero](https://github.com/Squonk42/buildroot-licheepi-zero) repo.
 
-What I do here is prepare Docker build image and set of scripts to do reliable build whenever I need it, based on abowe repo.
+What I do here is prepare Docker build image and set of scripts to do reliable build whenever I need it, based on above repo.
 
-Step are
+There are two variations of below setup, first is based on latest `buildroot` repo and have latest 5.x linux kernel, however default configuration doesn't have ethernet enabled, and I didn't manage yet prepare dts scripts to make it work. Other one in `./buildroot-licheepi` is based on earlier fork prepared by lichee-pi maintainers and have 4.x linux kernel. However it has network support (both eth and wlan) out of the box
+
+Build step are
 1. `git submodule update` will pull linked repos into appropriate folders
-1. Navigate to `./buildroot` folder. I recommend to open it in vscode, next steps will be executed as vscode tasks.
+1. Navigate to `./buildroot` or `./buildroot-licheepi` folder. I recommend to open it in vscode, next steps will be executed as vscode tasks.
 1. `build: build docker image` vscode task, this will build local image with all build tool required.
 1. `build: autoconfig` vscode task will prepare .config file
 1. `build: (optional) make menuconfig` vscode task will run visual editor for .config. Use it if you want to change build settings
 1. `build: make` vscode task will run actual build. It takes some time. Output will be placed in `./buildroot-licheepi-zero/output` folder like this:
 ```
-$ ls -alh buildroot-licheepi-zero/output/images/
+$ ls -alh buildroot/output/images/
 total 95M
 drwxr-xr-x 2 dronische dronische 4.0K Jan  7 20:34 .
 drwxr-xr-x 6 dronische dronische 4.0K Jan  7 19:52 ..
@@ -46,7 +48,7 @@ $ dd if=sdcard.img bs=1M | pv | sudo dd of=/dev/sdc bs=1M
 $ sudo sync
 ```
 Now stick sdcard into the board, connect serial monitor and power it up. You will be greeted by login prompt in couple of seconds
-Use `root` as login, `licheepi` as password.
+Use `root` as login, `licheepi` as password. In `buildroot` variation there is no password.
 ```
 ...
 [    1.580080] EXT4-fs (mmcblk0p2): re-mounted. Opts: data=ordered
@@ -64,6 +66,10 @@ drwxr-xr-x   18 root     root        1.0K Jan  7  2021 ..
 -rw-------    1 root     root          19 Jan  1 00:07 .ash_history
 # 
 ```
+
+### Rootfs overlay
+
+In desire to make rotation time a bit quicker I've also added ssh keys into image using filesystem overlay in `./rootfs_overlay` folder, where public key should be copied. Also in scripts folder there is a script to chmod file after build. 
 
 ## Das u-boot
 
